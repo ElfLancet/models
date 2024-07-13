@@ -13,21 +13,22 @@
 # limitations under the License.
 
 """TFM common training driver."""
+import os
+import random
 
-from absl import app
-from absl import flags
-from absl import logging
+import numpy as np
+
+SEED = 0
+
 import gin
 import tensorflow as tf
-
-from official.common import distribute_utils
-# pylint: disable=unused-import
-from official.common import registry_imports
+from absl import app, flags, logging
 # pylint: enable=unused-import
+# pylint: disable=unused-import
+from official.common import distribute_utils
 from official.common import flags as tfm_flags
-from official.core import task_factory
-from official.core import train_lib
-from official.core import train_utils
+from official.common import registry_imports
+from official.core import task_factory, train_lib, train_utils
 from official.modeling import performance
 from official.nlp import continuous_finetune_lib
 
@@ -100,7 +101,29 @@ def main(_):
 
   train_utils.save_gin_config(FLAGS.mode, model_dir)
 
+
+def set_seeds(seed=SEED):
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    random.seed(seed)
+    tf.random.set_seed(seed)
+    np.random.seed(seed)
+    tf.keras.utils.set_random_seed(seed)
+
+def set_global_determinism(seed=SEED):
+    set_seeds(seed=seed)
+
+    os.environ['TF_DETERMINISTIC_OPS'] = '1'
+    os.environ['TF_CUDNN_DETERMINISTIC'] = '1'
+    
+    tf.config.threading.set_inter_op_parallelism_threads(1)
+    tf.config.threading.set_intra_op_parallelism_threads(1)
+    tf.config.experimental.enable_op_determinism()
+
+
+
 if __name__ == '__main__':
+  set_global_determinism(seed=SEED)
+
   tfm_flags.define_flags()
   flags.mark_flags_as_required(['experiment', 'mode', 'model_dir'])
   app.run(main)
