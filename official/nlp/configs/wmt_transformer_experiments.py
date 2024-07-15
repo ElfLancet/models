@@ -37,7 +37,7 @@ def wmt_transformer_large() -> cfg.ExperimentConfig:
   hidden_size = 1024
   learning_rate *= (hidden_size**-0.5)
   warmup_steps = 10
-  train_steps = 300
+  train_steps = 5000
   token_batch_size = 64
   encdecoder = translation.EncDecoder(
       num_attention_heads=16, intermediate_size=hidden_size * 4)
