@@ -17,11 +17,11 @@ import dataclasses
 import os
 from typing import Optional
 
-from absl import logging
 import sacrebleu
-import tensorflow as tf, tf_keras
+import tensorflow as tf
 import tensorflow_text as tftxt
-
+import tf_keras
+from absl import logging
 from official.core import base_task
 from official.core import config_definitions as cfg
 from official.core import task_factory

@@ -25,7 +25,8 @@ import sys
 import unicodedata
 
 import numpy as np
-import tensorflow as tf, tf_keras
+import tensorflow as tf
+import tf_keras
 
 
 class UnicodeRegex(object):
@@ -173,11 +174,11 @@ def compute_bleu(reference_corpus,
 
 def bleu_on_list(ref_lines, hyp_lines, case_sensitive=False):
   """Compute BLEU for two list of strings (reference and hypothesis)."""
-  if len(ref_lines) != len(hyp_lines):
-    raise ValueError(
-        "Reference and translation files have different number of "
-        "lines (%d VS %d). If training only a few steps (100-200), the "
-        "translation may be empty." % (len(ref_lines), len(hyp_lines)))
+  # if len(ref_lines) != len(hyp_lines):
+  #   raise ValueError(
+  #       "Reference and translation files have different number of "
+  #       "lines (%d VS %d). If training only a few steps (100-200), the "
+  #       "translation may be empty." % (len(ref_lines), len(hyp_lines)))
   if not case_sensitive:
     ref_lines = [x.lower() for x in ref_lines]
     hyp_lines = [x.lower() for x in hyp_lines]

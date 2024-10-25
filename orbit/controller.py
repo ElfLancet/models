@@ -245,12 +245,6 @@ class Controller:
 
     tf.summary.experimental.set_step(self.global_step)
 
-    # Restores the model if needed.
-    if self.checkpoint_manager is not None:
-      restored_path = self.restore_checkpoint()
-      if restored_path:
-        _log(f"restored from checkpoint: {restored_path}")
-
     # Set Orbit framework gauge to True value
     _orbit_api_gauge.get_cell().set(True)
 
@@ -308,6 +302,12 @@ class Controller:
       ValueError: If no checkpoint is present in `checkpoint_manager.directory`.
       ValueError: If `steps` is not a positive value or -1.
     """
+    # Restores the model if needed.
+    if self.checkpoint_manager is not None:
+      restored_path = self.restore_checkpoint()
+      if restored_path:
+        _log(f"restored from checkpoint: {restored_path}")
+
     self._require("evaluator", for_method="evaluate")
 
     if steps > 0:
@@ -381,6 +381,12 @@ class Controller:
     Returns:
       The evaluation results as a dictionary mapping names to NumPy values.
     """
+        # Restores the model if needed.
+    if self.checkpoint_manager is not None:
+      restored_path = self.restore_checkpoint()
+      if restored_path:
+        _log(f"restored from checkpoint: {restored_path}")
+
     self._require("trainer", for_method="train_and_evaluate")
     self._require("evaluator", for_method="train_and_evaluate")
 
